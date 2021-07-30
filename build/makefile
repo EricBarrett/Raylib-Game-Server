@@ -17,12 +17,12 @@ PLATFORM ?= PLATFORM_DESKTOP
 BUILD_MODE ?= RELEASE
 
 # libraries
-ENET_INSTALL_PATH ?= include/enet
+ENET_INSTALL_PATH ?= ../../../../include/enet-1.3.17
 ENET_HEADERS ?= -I$(ENET_INSTALL_PATH)/include
 # STATIC (.a/.lib) or SHARED (.so/.dll)
 ENET_LIBTYPE        ?= STATIC
 
-RAYLIB_INSTALL_PATH ?= include/raylib/src
+RAYLIB_INSTALL_PATH ?= ../../../../include/raylib-3.7.0/src
 RAYLIB_HEADERS ?= -I$(RAYLIB_INSTALL_PATH) -I$(RAYLIB_INSTALL_PATH)/external
 RAYLIB_LIBS ?= -L$(RAYLIB_INSTALL_PATH) -L$(RAYLIB_INSTALL_PATH) $(RAYLIB_INSTALL_PATH)/raylib.rc.data
 RAYLIB_LIBTYPE ?= STATIC
