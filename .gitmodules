@@ -1,6 +1,6 @@
-[submodule "Include/raylib"]
-	path = Include/raylib
+[submodule "include/raylib"]
+	path = include/raylib
 	url = https://github.com/raysan5/raylib.git
-[submodule "Include/enet"]
-	path = Include/enet
+[submodule "include/enet"]
+	path = include/enet
 	url = https://github.com/lsalzman/enet.git
