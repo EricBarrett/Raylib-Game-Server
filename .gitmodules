@@ -1,0 +1,6 @@
+[submodule "Include/raylib"]
+	path = Include/raylib
+	url = https://github.com/raysan5/raylib.git
+[submodule "Include/enet"]
+	path = Include/enet
+	url = https://github.com/lsalzman/enet.git
