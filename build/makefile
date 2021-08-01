@@ -22,14 +22,15 @@ ENET_HEADERS ?= -I$(ENET_INSTALL_PATH)/include
 # STATIC (.a/.lib) or SHARED (.so/.dll)
 ENET_LIBTYPE        ?= STATIC
 
-RAYLIB_INSTALL_PATH ?= ../../../../include/raylib-3.7.0/src
-RAYLIB_HEADERS ?= -I$(RAYLIB_INSTALL_PATH) -I$(RAYLIB_INSTALL_PATH)/external
-RAYLIB_LIBS ?= -L$(RAYLIB_INSTALL_PATH) -L$(RAYLIB_INSTALL_PATH)
+RAYLIB_INSTALL_PATH ?= ../../../../include/raylib-3.7.0
+RAYLIB_SRC ?= $(RAYLIB_INSTALL_PATH)/src
+RAYLIB_HEADERS ?= -I$(RAYLIB_SRC) -I$(RAYLIB_SRC)/external -I$(RAYLIB_SRC)/extras
+RAYLIB_LIBS ?= -L$(RAYLIB_INSTALL_PATH) -L$(RAYLIB_SRC)
 RAYLIB_LIBTYPE ?= STATIC
 
 LIBPATHS = -L$(ENET_INSTALL_PATH) $(RAYLIB_LIBS)
 INCLUDES = $(ENET_HEADERS) $(RAYLIB_HEADERS)
-LIBFLAGS = -lenet -lraylib -lopengl32 -lgdi32 -static -lpthread
+LIBFLAGS = -lenet -lraylib
 # -- END OF CONFIGURATION --
 
 # -- SCRIPTS --
@@ -69,9 +70,15 @@ ifeq ($(PLATFORM),PLATFORM_RPI)
 endif
 
 ifeq ($(PLATFORM_OS),WINDOWS)
-	LIBFLAGS += -lws2_32 -lwinmm
-	RAYLIB_LIBS += $(RAYLIB_INSTALL_PATH)/raylib.rc.data
+	LIBFLAGS += -lopengl32 -lgdi32 -static -lpthread -lws2_32 -lwinmm
+	RAYLIB_LIBS += $(RAYLIB_SRC)/raylib.rc.data
 	MAKE = mingw32-make
+endif
+
+ifeq ($(PLATFORM_OS),LINUX)
+	LIBFLAGS += -lGL -lm -lpthread -ldl -lrt -lX11
+	RAYLIB_HEADERS += /usr/local/include
+	RAYLIB_LIBS += -L/usr/local/lib
 endif
 # -- END OF SCRIPTS --
 
