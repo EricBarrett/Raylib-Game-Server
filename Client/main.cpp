@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #define MAX_INPUT_CHARS 45
 
 //#define NOGDICAPMASKS

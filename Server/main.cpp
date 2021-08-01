@@ -1,6 +1,7 @@
 #include <iostream>
 #include <array>
 #include <string>
+#include <cstring>
 
 // handle global namespace mess
 #define NOGDI
