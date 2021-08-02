@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <string>
 #define MAX_INPUT_CHARS 45
 
 //#define NOGDICAPMASKS
@@ -127,6 +128,7 @@ int main(int argc, char ** argv)
 	enet_address_set_host(&addr, addrBox.contents().c_str());
 	addr.port = 1234;
 	char id[1];
+	size_t numid;
 	
 	// main loop
 	while ( !WindowShouldClose() )    // Detect window close button or ESC key
@@ -283,6 +285,7 @@ int main(int argc, char ** argv)
 							char * payload = reinterpret_cast<char*>(event.packet->data);
 							id[0] = payload[0];
 							id[1] = '\0';
+							numid = std::stoi(id);
 							
 							if ( isdigit(id[0]) )
 							{
@@ -290,7 +293,7 @@ int main(int argc, char ** argv)
 								connectButton.text = "Disconnect";
 								state = ONLINE;
 							}
-							std::cout << id << std::endl;
+							std::cout << "connected with id: " << id << std::endl;
 						}
 						else
 						{
@@ -372,15 +375,24 @@ int main(int argc, char ** argv)
 			{
 				case ENET_EVENT_TYPE_RECEIVE:
 				{
-					std::cout << "RECEIVED PACKET" << std::endl << "packet size: " << event.packet->dataLength << std::endl << "payload: " << event.packet->data << std::endl << "host: " << event.peer->address.host << std::endl << "channel: " << event.channelID << std::endl;
+//					std::cout << "RECEIVED PACKET" << std::endl << "packet size: " << event.packet->dataLength << std::endl << "payload: " << event.packet->data << std::endl << "host: " << event.peer->address.host << std::endl << "channel: " << event.channelID << std::endl;
 					//state = RUNNING;
 					char * payload = reinterpret_cast<char*>(event.packet->data);
 					
-					std::cout << payload << std::endl;
+					std::cout << "server: " << payload << std::endl;
 					std::shared_ptr< CTransform > transform = player->getComponent< CTransform >(TRANSFORM);
 					float x;
 					float y;
-					sscanf(payload, "%f %f", &x, &y);
+					char data[20];
+//					numid = std::stoi(id);
+					size_t sliceBegin = numid * 19;
+					size_t sliceEnd = sliceBegin + 20;
+					for (size_t index=sliceBegin; index < sliceEnd; index++)
+					{
+						data[index - sliceBegin] = payload[index];
+					}
+					std::cout << "client: " << data << std::endl;
+					sscanf(data, "%f %f", &x, &y);
 					if ( x != transform->pos.x || y != transform->pos.y )
 					{
 						std::cout << "Server-Client mismatch. Server coordinates: (" << x << ", " << y << "), Client coordinates: (" << transform->pos.x << ", " << transform->pos.y << ")" << std::endl;

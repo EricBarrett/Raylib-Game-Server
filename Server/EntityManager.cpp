@@ -29,6 +29,7 @@ void EntityManager::update()
 	}
 	m_entities = new_vec;
 	m_entityMap = new_map;
+	m_totalEntities = new_vec.size();
 }
 
 void EntityManager::clearEntities()
