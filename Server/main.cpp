@@ -24,9 +24,10 @@
 #include "EntityManager.h"
 #include "../GUI/gui.h"
 
+// TODO: config file
 #define PORT 1234
 
-// TODO: config file
+const std::string HOST_IP = "";
 enum AppState { OFFLINE, ONLINE, RUNNING };
 std::array< std::string, 2 > offlineText = { { "OFFLINE", "Boot Up" } };
 std::array< std::string, 2 > onlineText = { { "ONLINE", "Shutdown" } };
@@ -85,8 +86,14 @@ int main(int argc, char ** argv)
 	ENetAddress addr;
 	ENetEvent event;
 	ENetHost * server;
-	//enet_address_set_host(&addr, "127.0.0.1");
-	addr.host = ENET_HOST_ANY;
+	if (HOST_IP.size() > 0)
+	{
+		enet_address_set_host(&addr, HOST_IP.c_str());
+	}
+	else
+	{
+		addr.host = ENET_HOST_ANY;
+	}
 	addr.port = PORT;
 	server = enet_host_create(&addr, 4, 2, 0, 0);
 	
