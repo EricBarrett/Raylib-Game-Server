@@ -77,7 +77,7 @@ endif
 
 ifeq ($(PLATFORM_OS),LINUX)
 	LIBFLAGS += -lGL -lm -lpthread -ldl -lrt -lX11
-	RAYLIB_HEADERS += /usr/local/include
+	RAYLIB_HEADERS += -I/usr/local/include
 	RAYLIB_LIBS += -L/usr/local/lib
 endif
 # -- END OF SCRIPTS --
