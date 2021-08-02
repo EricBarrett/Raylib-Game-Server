@@ -62,7 +62,8 @@ int main(int argc, char ** argv)
 {
 	const int screenWidth = 800;
 	const int screenHeight = 500;
-	char msg[20];
+	char data[20];
+	char msg[100];
 	ClientManager connected;
 	AppState state = OFFLINE;
 	if ( enet_initialize() != 0 )
@@ -119,26 +120,17 @@ int main(int argc, char ** argv)
 			entities.update();
 			std::shared_ptr< CTransform > transform = nullptr;
 			// server objects
-			for (auto e : entities.getEntities("client"))
+			for (auto e : entities.getEntities())
 			{
 				transform = e->getComponent< CTransform >(TRANSFORM);
-			}
-			if ( state == RUNNING )
-			{
-				for (auto e : entities.getEntities("test"))
-				{
-					transform = e->getComponent< CTransform >(TRANSFORM);
-					transform->pos.x += initVel.x;
-					transform->pos.y += initVel.y;
-				}
-//				std::shared_ptr< CTransform > transform = teste->getComponent< CTransform >(TRANSFORM);
-//				snprintf(msg, sizeof msg, "%f %f", transform->pos.x, transform->pos.y);
-//				broadcastPacket(server, msg);
+				snprintf(data, sizeof data, "%f %f\n", transform->pos.x, transform->pos.y);
+				strcat(msg, data);
 			}
 			if ( transform )
 			{
-				snprintf(msg, sizeof msg, "%f %f", transform->pos.x, transform->pos.y);
 				broadcastPacket(server, msg);
+				msg[0] = '\0';
+				data[0] = '\0';
 			}
 			
 		}
@@ -217,6 +209,7 @@ int main(int argc, char ** argv)
 					enet_peer_disconnect_now(kicked->conn(), 0);
 					//enet_peer_reset(connected[index]);
 					connected.removeClient(kicked);
+					entities.removeEntity(entities.getEntities()[kicked->id()]);
 				
 					break;
 				}
@@ -225,7 +218,7 @@ int main(int argc, char ** argv)
 				{
 //					std::cout << teste->tag() << std::endl;
 					std::shared_ptr< CTransform > transform = teste->getComponent< CTransform >(TRANSFORM);
-					snprintf(msg, sizeof msg, "%f %f", transform->pos.x, transform->pos.y);
+					snprintf(data, sizeof msg, "%f %f", transform->pos.x, transform->pos.y);
 					
 					sendPacket(connected.getClients()[index]->conn(), msg);
 					
@@ -247,6 +240,7 @@ int main(int argc, char ** argv)
 						enet_peer_disconnect_now((*it)->conn(), 0);
 						//enet_peer_reset(connected[i]);
 						connected.removeClient((*it));
+						entities.removeEntity(entities.getEntities()[(*it)->id()]);
 						//connected.update();
 					}
 					
@@ -314,7 +308,7 @@ int main(int argc, char ** argv)
 				
 				case ENET_EVENT_TYPE_RECEIVE:
 				{
-					std::cout << "RECEIVED PACKET" << std::endl << "packet size: " << event.packet->dataLength << std::endl << "payload: " << event.packet->data << std::endl << "host: " << event.peer->address.host << std::endl << "channel: " << event.channelID << std::endl;
+//					std::cout << "RECEIVED PACKET" << std::endl << "packet size: " << event.packet->dataLength << std::endl << "payload: " << event.packet->data << std::endl << "host: " << event.peer->address.host << std::endl << "channel: " << event.channelID << std::endl;
 					unsigned char * payload = event.packet->data;
 					int length = event.packet->dataLength;
 					std::string req(reinterpret_cast<char*>(payload), length);
@@ -333,6 +327,7 @@ int main(int argc, char ** argv)
 							std::cout << cid << std::endl;
 							if ( cid < entities.getEntities().size() )
 							{
+								// TODO: only send the changes in input
 								std::shared_ptr< Entity > entity = entities.getEntities()[cid];
 								std::shared_ptr< CTransform > transform = entity->getComponent< CTransform >(TRANSFORM);
 								char up = 'w';
@@ -361,6 +356,7 @@ int main(int argc, char ** argv)
 								std::cout << "bad input: " << cid << " is not a valid index" << std::endl;
 							}
 						}
+						// host commands
 						else if ( event.peer->address.host == connected.getClients()[1]->conn()->address.host )
 						{
 							if ( req.compare("/run") == 0 && state == ONLINE )
@@ -392,6 +388,7 @@ int main(int argc, char ** argv)
 							if ( c->conn()->address.host == event.peer->address.host )
 							{
 								connected.removeClient(c);
+								entities.removeEntity(entities.getEntities()[c->id()]);
 							
 								break;
 							}
@@ -404,6 +401,7 @@ int main(int argc, char ** argv)
 		}
 	}
 	
+	std::cout << "exiting" << std::endl;
 	CloseWindow();
 	enet_host_destroy(server);
 	
