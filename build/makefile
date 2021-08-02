@@ -17,7 +17,7 @@ PLATFORM ?= PLATFORM_DESKTOP
 BUILD_MODE ?= RELEASE
 
 # libraries
-ENET_INSTALL_PATH ?= ../../../../include/enet-1.3.17
+ENET_INSTALL_PATH ?= ../../../../include/enet
 ENET_HEADERS ?= -I$(ENET_INSTALL_PATH)/include
 # STATIC (.a/.lib) or SHARED (.so/.dll)
 ENET_LIBTYPE        ?= STATIC
