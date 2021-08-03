@@ -70,9 +70,13 @@ const int DISCONN_TIME = 3000;
 
 enum AppState {OFFLINE, ONLINE, RUNNING};
 
-void sendPacket(ENetPeer* peer, const char* payload)
+void sendPacket(ENetPeer* peer, const char* payload, int length = -1)
 {
-	ENetPacket* packet = enet_packet_create(payload, strlen(payload) + 1, ENET_PACKET_FLAG_RELIABLE);
+	if (length < 0)
+	{
+		length = strlen(payload) + 1;
+	}
+	ENetPacket* packet = enet_packet_create(payload, length, ENET_PACKET_FLAG_RELIABLE);
 	enet_peer_send(peer, 0, packet);
 }
 
@@ -366,7 +370,7 @@ int main(int argc, char ** argv)
 		
 		if ( sendButton.isFocus() && (state == ONLINE || state == RUNNING) )
 		{
-			sendPacket(peer, msgBox.contents().c_str());
+			sendPacket(peer, msgBox.contents().c_str(), msgBox.contents().size());
 		}
 		
         if ( enet_host_service(client, &event, 0) > 0 )
@@ -387,6 +391,8 @@ int main(int argc, char ** argv)
 //					numid = std::stoi(id);
 					size_t sliceBegin = numid * 19;
 					size_t sliceEnd = sliceBegin + 20;
+//					std::cout << payload[sliceBegin] << std::endl;
+//					std::cout << payload[sliceEnd] << std::endl;
 					for (size_t index=sliceBegin; index < sliceEnd; index++)
 					{
 						data[index - sliceBegin] = payload[index];
