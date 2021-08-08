@@ -43,11 +43,11 @@ void ClientManager::removeClient(std::shared_ptr< Client > client)
 	m_totalClients--;
 }
 
-std::shared_ptr< Client > ClientManager::addClient(ENetPeer* peer, const size_t& id, std::string username, Rank rank)
+std::shared_ptr< Client > ClientManager::addClient(ENetPeer* peer, std::string username, Rank rank)
 {
-	m_totalClients++;
-	auto e = std::shared_ptr< Client >(new Client(peer, id, username, rank));
+	auto e = std::shared_ptr< Client >(new Client(peer, m_totalClients, username, rank));
 	m_toAdd.push_back(e);
+	m_totalClients++;
 	
 	return e;
 }

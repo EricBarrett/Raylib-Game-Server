@@ -3,7 +3,7 @@
 SERVEREX_NAME ?= udp_server
 CLIENTEX_NAME ?= udp_client
 DESTDIR ?= ..
-SERVERSRC ?= ../Server/main.cpp ../Server/EntityManager.cpp ../Server/ClientManager.cpp
+SERVERSRC ?= ../Server/main.cpp ../Server/EntityManager.cpp ../Server/ClientManager.cpp ../Server/GameEngine.cpp ../Server/Server.cpp ../Server/Scene.cpp
 CLIENTSRC ?= ../Client/main.cpp ../Client/EntityManager.cpp
 SERVER_OBJS = $(patsubst %.c, %.o, $(SERVERSRC))
 CLIENT_OBJS = $(patsubst %.c, %.o, $(CLIENTSRC))
