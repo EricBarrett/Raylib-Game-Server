@@ -20,7 +20,7 @@ public:
 	void clearClients();
 	void update();
 	void removeClient(std::shared_ptr< Client > client);
-	std::shared_ptr< Client > addClient(ENetPeer* peer, const size_t& id, std::string username, Rank rank =  GUEST);
+	std::shared_ptr< Client > addClient(ENetPeer* peer, std::string username, Rank rank =  GUEST);
 	ClientVec & getClients();
 	ClientVec & getClients(const std::string & tag);
 	size_t size();

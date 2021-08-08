@@ -378,8 +378,6 @@ int main(int argc, char ** argv)
 			{
 				case ENET_EVENT_TYPE_RECEIVE:
 				{
-//					std::cout << "RECEIVED PACKET" << std::endl << "packet size: " << event.packet->dataLength << std::endl << "payload: " << event.packet->data << std::endl << "host: " << event.peer->address.host << std::endl << "channel: " << event.channelID << std::endl;
-					//state = RUNNING;
 					char * payload = reinterpret_cast<char*>(event.packet->data);
 					
 					std::cout << "server: " << payload << std::endl;
@@ -387,11 +385,8 @@ int main(int argc, char ** argv)
 					float x;
 					float y;
 					char data[20];
-//					numid = std::stoi(id);
-					size_t sliceBegin = numid * 19;
-					size_t sliceEnd = sliceBegin + 20;
-//					std::cout << payload[sliceBegin] << std::endl;
-//					std::cout << payload[sliceEnd] << std::endl;
+					size_t sliceBegin = (numid - 1) * 19; // make room for dummy client
+					size_t sliceEnd = sliceBegin + 19;
 					for (size_t index=sliceBegin; index < sliceEnd; index++)
 					{
 						data[index - sliceBegin] = payload[index];
